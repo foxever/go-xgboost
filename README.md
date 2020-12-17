@@ -1,19 +1,19 @@
 WORK IN PROGRESS... USE AT OWN RISK :-)
 
 [![Build Status](https://travis-ci.org/Applifier/go-xgboost.svg?branch=master)](https://travis-ci.org/Applifier/go-xgboost)
-[![GoDoc](https://godoc.org/github.com/Applifier/go-xgboost?status.svg)](http://godoc.org/github.com/Applifier/go-xgboost)
+[![GoDoc](https://godoc.org/github.com/foxever/go-xgboost?status.svg)](http://godoc.org/github.com/foxever/go-xgboost)
 
 # go-xgboost
 
 Go bindings for [XGBoost](https://github.com/dmlc/xgboost)
 
 ```go
-import "github.com/Applifier/go-xgboost"
+import "github.com/foxever/go-xgboost"
 ```
 
 ## Usage
 
-This library is meant for running predictions against a pre-trained XGBoost model. Limited training related functionality is implemented under [core](https://github.com/Applifier/go-xgboost/blob/master/core) but training the model in python or using the xgboost cli is encouraged. 
+This library is meant for running predictions against a pre-trained XGBoost model. Limited training related functionality is implemented under [core](https://github.com/foxever/go-xgboost/blob/master/core) but training the model in python or using the xgboost cli is encouraged. 
 
 ```go
 
@@ -29,4 +29,4 @@ fmt.Printf("Results: %+v\n", res)
 
 ## License
 
-[MIT](https://github.com/Applifier/go-xgboost/blob/master/LICENSE)
+[MIT](https://github.com/foxever/go-xgboost/blob/master/LICENSE)
