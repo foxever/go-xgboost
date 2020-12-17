@@ -62,7 +62,7 @@ func (booster *XGBooster) Predict(mat *XGDMatrix, optionMask int, ntreeLimit uin
 	var outLen C.bst_ulong
 	var outResult *C.float
 
-	res := C.XGBoosterPredict(booster.handle, mat.handle, C.int(optionMask), C.uint(ntreeLimit), &outLen, &outResult)
+	res := C.XGBoosterPredict(booster.handle, mat.handle, C.int(optionMask), C.uint(ntreeLimit), C.int(0), &outLen, &outResult)
 	if err := checkError(res); err != nil {
 		return nil, err
 	}
