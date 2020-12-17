@@ -5,7 +5,7 @@ import (
 	"errors"
 	"runtime"
 
-	"github.com/Applifier/go-xgboost/core"
+	"github.com/foxever/go-xgboost/core"
 )
 
 // Matrix interface for 2D matrix
