@@ -84,6 +84,62 @@ func NewPredictor(xboostSavedModelPath string, workerCount int, optionMask int, 
 	return &multiBooster{reqChan: requestChan}, nil
 }
 
+func NewPredictorFromBuffer(xboostSavedModelBuffer []byte, workerCount int, optionMask int, nTreeLimit uint, missingValue float32) (Predictor, error) {
+	if workerCount <= 0 {
+		return nil, errors.New("worker count needs to be larger than zero")
+	}
+
+	requestChan := make(chan multiBoosterRequest)
+	initErrors := make(chan error)
+	defer close(initErrors)
+
+	for i := 0; i < workerCount; i++ {
+		go func() {
+			runtime.LockOSThread()
+			defer runtime.UnlockOSThread()
+
+			booster, err := core.XGBoosterCreate(nil)
+			if err != nil {
+				initErrors <- err
+				return
+			}
+
+			err = booster.LoadModelFromBuffer(xboostSavedModelBuffer)
+			if err != nil {
+				initErrors <- err
+				return
+			}
+
+			// No errors occured during init
+			initErrors <- nil
+
+			for req := range requestChan {
+				data, rowCount, columnCount := req.matrix.Data()
+				matrix, err := core.XGDMatrixCreateFromMat(data, rowCount, columnCount, missingValue)
+				if err != nil {
+					req.resultChan <- multiBoosterResponse{
+						err: err,
+					}
+					continue
+				}
+
+				res, err := booster.Predict(matrix, optionMask, nTreeLimit)
+				req.resultChan <- multiBoosterResponse{
+					err:    err,
+					result: res,
+				}
+			}
+		}()
+
+		err := <-initErrors
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &multiBooster{reqChan: requestChan}, nil
+}
+
 type multiBoosterRequest struct {
 	matrix     Matrix
 	resultChan chan multiBoosterResponse

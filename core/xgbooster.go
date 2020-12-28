@@ -87,6 +87,11 @@ func (booster *XGBooster) LoadModel(filePath string) error {
 	return checkError(C.XGBoosterLoadModel(booster.handle, cfilePath))
 }
 
+// LoadModelFromBuffer load model from memory buffer
+func (booster *XGBooster) LoadModelFromBuffer(buf []byte) error {
+	return checkError(C.XGBoosterLoadModelFromBuffer(booster.handle, unsafe.Pointer(&buf[0]), C.ulong(len(buf))))
+}
+
 // SaveModel save model into file
 func (booster *XGBooster) SaveModel(filePath string) error {
 	cfilePath := C.CString(filePath)
